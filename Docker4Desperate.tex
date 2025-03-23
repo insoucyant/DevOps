@@ -23,19 +23,19 @@
 \maketitle
 
 \begin{abstract}
-A \textbf{\textcolor{red}{\hl{Container}}} is the running instance of an application based off the container image. In this chapter we will learn how to install the \textbf{\textcolor{red}{\hl{Docker Engine}}} and the \textbf{\textcolor{red}{\hl{.docker Client Command Line Tool}}}. We will also get a crash in \textbf{\textcolor{red}{\hl{Dockerfiles}}}, \textbf{\textcolor{red}{\hl{Container Images}}}, and \textbf{\textcolor{red}{\hl{Containers}}}. We will combine this knowledge, along with some basic \textbf{\textcolor{red}{\hl{Docker Commands}}} to containerize a sample application. By the end of this chapter you will have a solid understanding of how to use Docker 
+A \textbf{\textcolor{red}{\hl{Container}}} is the running instance of an application based off the container image. In this chapter, we will learn how to install the \textbf{\textcolor{red}{\hl{Docker Engine}}} and the \textbf{\textcolor{red}{\hl{.docker Client Command Line Tool}}}. We will also get a crash in \textbf{\textcolor{red}{\hl{Dockerfiles}}}, \textbf{\textcolor{red}{\hl{Container Images}}}, and \textbf{\textcolor{red}{\hl{Containers}}}. We will combine this knowledge, along with some basic \textbf{\textcolor{red}{\hl{Docker Commands}}} to containerize a sample application. By the end of this chapter, you will have a solid understanding of how to use Docker 
 \end{abstract}
 
 \section{Introduction}
 \begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=Container ] 
 A \textit{container} is the running instance of an application based off a container image.
 \end{tcolorbox}
-Using containers provide you with a predictable and isolated way to create and run code. It allows you to package an application and its dependecies into a portable artifact you can easily distribute and run. Microservices architectures and continuous integration/continuous deployment pipelines heavily use containers. \\
+Using containers provides you with a predictable and isolated way to create and run code. It allows you to package an application and its dependencies into a portable artifact you can easily distribute and run. Microservices architectures and continuous integration/continuous deployment pipelines heavily use containers. \\
 
 \section{Docker from 3000 feet}
 %*********************************************************************
 The word \textit{Docker} has become synonymous with the container movement. This is due to Docker's ease of use, the rise of microservice architectures, and the need to solve the "works on my machine" paradox. \\
-The \textbf{\textcolor{red}{\hl{Docker framework}}} consists of a \textbf{\textcolor{red}{\hl{Docker daemon (server)}}}, a \textbf{\textcolor{red}{\hl{Docker command line client}}}, and other tools. \underline{ \textit{Docker uses Linux kernel features to build and run containers}.} These pieces fit together to allow Docker to do its magic: \textit{OS-level virtualization}, - which partitions the operating system into what looks like separated isolated servers. Because of this, containers are effective when you need to run a lot of applications on limited hardware. 
+The \textbf{\textcolor{red}{\hl{Docker framework}}} consists of a \textbf{\textcolor{red}{\hl{Docker daemon (server)}}}, a \textbf{\textcolor{red}{\hl{Docker command line client}}}, and other tools. \underline{ \textit{Docker uses Linux kernel features to build and run containers}.} These pieces fit together to allow Docker to do its magic: \textit{OS-level virtualization}, - which partitions the operating system into what looks like separated, isolated servers. Because of this, containers are effective when you need to run a lot of applications on limited hardware. 
 \\
 \subsection{Getting started with Docker}
 %*********************************************************************
@@ -65,8 +65,22 @@ The \textbf{\textcolor{red}{\hl{Docker framework}}} consists of a \textbf{\textc
 \end{itemize}
 \subsection{Container Images and Layers}
 The Dockerfile you build creates a container image. This image is made of different layers that house your application, dependencies, and anything else the application needs so it can run. These layers are like snapshots in time of your application's state, so keeping your Dockerfile in version control along with your source code makes it easier to build new container images every time your application code changes. \\
-The layers fit together like LEGO bricks. Each layer, or intermediate image, is created each time an instruction in the Dockerfile is executed. For example, every time you use $RUN$ instruction, a new intermediate layer is created with the results of that instruction. Each layer (image) is assigned a unique hash, and all the layers are cached by default.  This mean you can share layers with other images, so if  a given layer hasn't changed, you don't need to build it from scratch. Also, caching is your best friend, as it cuts down the time and space needed to build images. \\
-Docker can stack these layers on top of each other because it uses the \textit{union filesystem (UFS)}, which allows multiple filesystem to come together and create what looks like a single filesystem. The topmost layer is the \textit{container layer}, which is added when you run teh container image. It is the only layer that can be wirtten to. 
+The layers fit together like LEGO bricks. Each layer, or intermediate image, is created each time an instruction in the Dockerfile is executed. For example, every time you use $RUN$ instruction, a new intermediate layer is created with the results of that instruction. Each layer (image) is assigned a unique hash, and all the layers are cached by default.  This means you can share layers with other images, so if  a given layer hasn't changed, you don't need to build it from scratch. Also, caching is your best friend, as it cuts down the time and space needed to build images. \\
+Docker can stack these layers on top of each other because it uses the \textit{union filesystem (UFS)}, which allows multiple filesystems to come together and create what looks like a single filesystem. The topmost layer is the \textit{container layer}, which is added when you run the container image. It is the only layer that can be written to. All the subsequent layers are read-only, by design. If you make any file or system changes to the container layer and then remove the running container, those changes will be gone. The underlying read-only images are kept intact. The image is an immutable artifact that can be run on any Docker host and behave in the same way. \\
+\subsubsection{Container}
+The Docker container is a running instance of a container image. Container image is a class and the container is an instance of that class. When the container starts, the container layer is created. This writable layer is where all the changes will take place.
+\subsubsection{Namespaces \& Cgroups}
+The container is also roped off from the rest of the Linux host by some boundaries and views called namespaces and cgroups. These are kernel features that limit what a container can see and use as a host. They also make OS level virtualization a reality. Namespaces restruct global system resources for a container. Without namespaces, container could have free run of the system. Imagine if a container could see a process in another container. That mischievous container could kill a process, delete a user, or unmount a device in another container. Common kernel namespaces include the following:
+\begin{itemize}
+    \item Process ID (PID): Isolates the process ID
+    \item Network (net): Isolates the network interface stack
+    \item UTS: Isolates hostname and domain name
+    \item Mount (mnt): Isolates the mount point
+    \item IPS: Isolates the SysV-style interprocess communication
+    \item User: Isolates the user and group IDs
+\end{itemize}
+Using these namespaces is not enough, however. You also need to control how much memory, CPU, and other physical resources a container uses. That's where cgroups come in. Cgroups manage and measure the resources a container can use. This allows you to set resource limitations and prioritization for processes. \\
+The most common resources Docker sets with cgroups are memory, CPU, disk I/O, and network. Cgroups make it possible to stop a container from using up all the resources on a host. Namespaces limit what you can see while cgroups limit what you can use. 
 %*********************************************************************
 %*********************************************************************
 \section{Installing and Testing Docker}
