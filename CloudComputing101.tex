@@ -1,0 +1,89 @@
+\documentclass{article}
+% https://github.com/Devinterview-io/docker-interview-questions
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+\usepackage{color,soul}
+\usepackage[most]{tcolorbox}
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
+
+\title{Cloud Computing for the Desperate}
+\author{SS}
+
+\begin{document}
+\maketitle
+
+
+\section{Scaling}
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=Container ] 
+A \textit{container} is the running instance of an application based off a container image.
+\end{tcolorbox}
+A container makes application portable and consistent, but it's only one piece of a modern application stack. Imagine needing to manage thousands of containers on different hosts, network ports and shared volumes What if one container stopped? How could you scale for load? How could you force containers to run on different hosts for availability? \textbf{\textcolor{red}{\hl{Container Orchestration}}} solves all these issues and more  \\
+\subsection{Vertical Scaling}
+\subsection{Horizontal Scaling}
+\section{Load Balancing}
+%*********************************************************************
+The word \textit{Docker} has become synonymous with the container movement. This is due to Docker's ease of use, the rise of microservice architectures, and the need to solve the "works on my machine" paradox. \\
+The \textbf{\textcolor{red}{\hl{Docker framework}}} consists of a \textbf{\textcolor{red}{\hl{Docker daemon (server)}}}, a \textbf{\textcolor{red}{\hl{Docker command line client}}}, and other tools. \underline{ \textit{Docker uses Linux kernel features to build and run containers}.} These pieces fit together to allow Docker to do its magic: \textit{OS-level virtualization}, - which partitions the operating system into what looks like separated isolated servers. Because of this, containers are effective when you need to run a lot of applications on limited hardware. 
+\\
+\subsection{Getting started with Docker}
+%*********************************************************************
+\noindent
+{\color{red} \rule{\linewidth}{0.5mm}}
+\textcolor{red}{What does the dockerfile contain?} \\
+\textcolor{red}{How are container images served and distributed?} \\
+\textcolor{red}{What is a container image made of?} \\
+\textcolor{red}{What is the only layer that can be written to?} \\
+\noindent
+{\color{red} \rule{\linewidth}{0.5mm}}
+\begin{enumerate}
+    \item First, you will \underline{ create a \textit{Dockerfile}} that describes how to build the \textit{container image} from your application, dependencies, and anything else that application needs so it can run. Container images can be distributed and served from a service called \textbf{\textcolor{red}{\hl{registry }}}. Docker hosts the most popular registry. 
+    \item With a simple \textbf{\textcolor{red}{\hl{docker pull   $<imagename>$}}} command, you can download and use an image in a matter of seconds. \textit{A container is the running instance of an application based off the container image.}
+\end{enumerate}
+\subsection{Dockerfile Instructions}
+\textcolor{PineGreen} {\textit{The Dockerfile contains the instructions that teach the Docker server how to turn an application into a container image.}} Each instruction represents a specific job and creates a new layer inside the container image. The following list includes the most common instructions: 
+\begin{itemize}
+\color{blue}
+\item \textbf{FROM}: Specifies the parent or base image from which to build the new image (must be the first command in the file)
+\item \textbf{COPY}: Adds files from your current directory (where the Dockerfile resides) to a destination in the image filesystem
+\item \textbf{RUN}:  Executes a command inside the image
+\item \textbf{ADD}: Copies new files or directories from either a source or URL to a destination in the image filesystem
+\item \textbf{ENTRYPOINT}: Makes your container run like an executable (which you can think of as any Linux command line application that takes arguments on your host)
+\item \textbf{CMD}: Provides a default command or default parameters for the container (can be used in conjunction with ENTRYPOINT)
+
+\end{itemize}
+\subsection{Container Images and Layers}
+The Dockerfile you build creates a container image. This image is made of different layers that house your application, dependencies, and anything else the application needs so it can run. These layers are like snapshots in time of your application's state, so keeping your Dockerfile in version control along with your source code makes it easier to build new container images every time your application code changes. \\
+The layers fit together like LEGO bricks. Each layer, or intermediate image, is created each time an instruction in the Dockerfile is executed. For example, every time you use $RUN$ instruction, a new intermediate layer is created with the results of that instruction. Each layer (image) is assigned a unique hash, and all the layers are cached by default.  This mean you can share layers with other images, so if  a given layer hasn't changed, you don't need to build it from scratch. Also, caching is your best friend, as it cuts down the time and space needed to build images. \\
+Docker can stack these layers on top of each other because it uses the \textit{union filesystem (UFS)}, which allows multiple filesystem to come together and create what looks like a single filesystem. The topmost layer is the \textit{container layer}, which is added when you run teh container image. It is the only layer that can be wirtten to. 
+%*********************************************************************
+%*********************************************************************
+\section{Auto Scaling}
+\noindent
+{\color{red} \rule{\linewidth}{0.5mm}}
+\textcolor{red}{15. What information is contained in a commit  in Git?} \\
+\noindent
+{\color{red} \rule{\linewidth}{0.5mm}}
+%*********************************************************************
+%*********************************************************************
+\section{Serverless}
+\noindent
+{\color{red} \rule{\linewidth}{0.5mm}}
+\textcolor{red}{15. What information is contained in a commit  in Git?} \\
+\noindent
+{\color{red} \rule{\linewidth}{0.5mm}}
+\section{Reference}
+\begin{itemize}
+    \item \href{https://www.youtube.com/watch?v=ZaA0kNm18pE}{Be a Better Dev}
+    \item \href{https://www.redhat.com/en/topics/cloud-native-apps/what-is-serverless}{What is Serverless}
+\end{itemize}
+\end{document}
