@@ -1,0 +1,158 @@
+\documentclass{article}
+% https://github.com/Devinterview-io/docker-interview-questions
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+\usepackage{color,soul}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
+
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
+
+\title{Leet Code - Stack}
+\author{SS}
+
+\begin{document}
+\maketitle
+
+\section{Problems}
+\begin{itemize}
+    \item 682. Baseball Game
+    \item 20. Valid Parentheses
+    \item 739. Daily Temperature
+    \item 150. Evaluate Reverse Polish Notation (RPN)
+    \item 155. Min Stack
+    \item 84. Histogram
+\end{itemize}
+%*********************************************************************
+\section{Baseball Game}
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=682.Baseball Game ] 
+Describe.
+\end{tcolorbox}
+\begin{lstlisting}[language=Python]
+def CalPoints(self, operations:List[str]) -> int:
+    stk = []
+    for op in operations:
+        if op == '+':
+            stk.append(stk[-1] + stk[-2])
+        elif op == 'D':
+            stk.append(stk[-1]*2)
+        elif op == 'C':
+            stk.pop()
+        else:
+            stk.append(int(op))
+    return sum(stk)
+    # Time: O(n)
+    # Space: O(n)
+
+\end{lstlisting}
+%*********************************************************************
+\section{Valid Parentheses}
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=20.Valid Parentheses ] 
+Describe.
+\end{tcolorbox}
+\begin{lstlisting}[language=Python]
+def isValid(self, s:str) -> bool:
+    hashmap = {
+    ')':'(', '}':'{', ']':'['
+    } 
+    # In Python the easiest way to build a stack is to build an empty list
+    stk = []
+    # We 'append' when we want to put something on the top of the stack
+    # We use 'pop' when we want to take something off the top/right
+    # We are appending to the right. We are popping from the right.
+    # LIFO
+    for c in s:
+        if c not in hashmap: # Open Bracket
+            stk.append(c)
+        else: # It is a closing bracket
+            if not stk: # Stack is empty
+                return False # You have a closing bracket but no corresponding opening bracket (since no bracket at all)
+            else:
+                popped = stk.pop()
+                if popped != hashmap[c]: 
+                    return False
+    return not stk # Stack should be empty with no bracket dangling inside
+    # Time: O(n)
+    # Space: O(n)
+                
+
+\end{lstlisting}
+%*********************************************************************
+\section{739. Daily Temperature}
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=739. Daily Temperature ] 
+Describe.
+\end{tcolorbox}
+\begin{lstlisting}[language=Python]
+# Monotonic Stack = [(73,0), (74,1), ..]
+def dailyTemperature(self, temperatures: List[int]) -> List[int]:
+    n = len(temperatures)
+    answer = [0]*n
+    stk = []
+    for i,t in enumerate(temperatures):
+        while stk and stk[-1][0] < t:
+            stk_i, stk_t = stk.pop()
+            answer[stk_i] = i - stk_i
+        stk.append((t,i))
+    return answer
+
+\end{lstlisting}
+%*********************************************************************
+\section{150. Evaluate Reverse Polish Notation (RPN)}
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=150. Evaluate Reverse Polish Notation (RPN) ] 
+Describe.
+\end{tcolorbox}
+\begin{lstlisting}[language=Python]
+from math import ceil, floor
+def evalRPN(self, tokens:list[str]) -> int
+    stk = [] # Dynamic Array
+    for t in tokens:
+        if t in '+-*/':
+            b,a = stk.pop(), stk.pop()
+
+            if t == '+':
+                stk.append(a+b)
+            elif t == '*':
+                stk.append(a*b)
+            elif t == '-':
+                stk.append(a-b)
+            else:
+                divisor = a/b
+                if divisor < 0:
+                    stk.append(ceil(divisor))
+                else:
+                    stk.append(floor(divisor))
+        else:
+            stk.append(int(t))
+    return stk[0]
+
+\end{lstlisting}
+%*********************************************************************
+\section{155. Min Stack}
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=155. Min Stack ] 
+Describe.
+\end{tcolorbox}
+\begin{lstlisting}[language=Python]
+def 
+
+\end{lstlisting}
+%*********************************************************************
+\section{84. Histogram}
+\begin{tcolorbox}[colback=red!5!white, colframe=red!50!black,title=84. Histogram ] 
+Describe.
+\end{tcolorbox}
+\begin{lstlisting}[language=Python]
+def 
+
+\end{lstlisting}
+
+\end{document}
