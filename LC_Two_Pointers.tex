@@ -18,7 +18,7 @@
 \usepackage{xcolor}
 \usepackage[dvipsnames]{xcolor}
 
-\title{Leet Code - Stack}
+\title{Leet Code - Two Poinrers Problems}
 \author{SS}
 
 \begin{document}
@@ -42,7 +42,19 @@
 Describe.
 \end{tcolorbox}
 \begin{lstlisting}[language=Python]
-def 
+def sortedSquares(self, nums: List[int]) -> List[int]:
+    left = 0
+    right = len(nums) - 1
+    result = []
+    while left <= right:
+        lf abs(nums[left]) > abs(nums[right]):
+            result.append(nums[left]**2)
+            left += 1
+        else:
+            result.append(nums[right]**2)
+            right -= 1
+    # result.reverse()
+    return result[::-1]
 
 \end{lstlisting}
 %*********************************************************************
